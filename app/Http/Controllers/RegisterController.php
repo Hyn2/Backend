@@ -29,8 +29,8 @@ class RegisterController extends Controller
             'profile_image' => env('DEFAULT_PROFILE_IMAGE_PATH'),
         ]);
         if(!$user) {
-            return response()->json(['error' => 'Falied to add user'], 500);
+            return response()->json(['error' => '회원가입에 실패하였습니다.'], 500);
         }
-        return response()->json(['message' => 'User add successfully'], 201);     
+        return response()->json(['message' => '회원가입에 성공하였습니다!'], 201);
     }
 }

@@ -25,7 +25,7 @@ class UserController extends Controller
             $user = User::where('id', $id)->firstOrFail();
         } catch(ModelNotFoundException $e) {
             $errMsg = $e->getMessage();
-            return response()->json(['error' => $errMsg], 500);
+            return response()->json(['error' => '해당하는 사용자가 존재하지 않습니다.'], 404);
         }
 
         return response()->json($user);
@@ -37,7 +37,7 @@ class UserController extends Controller
             $request->validate([
                 'id' => 'required|string',
                 'nickname' => 'filled|string',
-                'password' => 'filled|string', 
+                'password' => 'filled|string',
                 'profile_image' => 'filled|string',
             ]);
         } catch(ValidationException $e) {
@@ -55,18 +55,18 @@ class UserController extends Controller
             $userData = User::find($userId);
         } catch(ModelNotFoundException $e) {
             $errMsg = $e->getMessage();
-            return response()->json(['error' => $errMsg], 404);
+            return response()->json(['error' => '해당하는 사용자가 존재하지 않습니다.'], 404);
         }
 
         foreach ($updateData as $key => $value) {
-            $update = ($key == 'password') ? 
-                $userData->update(['password' => Hash::make($request->password)]) : 
+            $update = ($key == 'password') ?
+                $userData->update(['password' => Hash::make($request->password)]) :
                 $userData->update([$key => $value]);
             if(!$update) {
-                return response()->json(['error' => `Failed to update {$key}`]);
+                return response()->json(['error' => `{$key} 수정에 실패하였습니다.`]);
             }
         }
-        return response()->json(['message' => 'User updated successfully'], 200);
+        return response()->json(['message' => '회원정보가 수정되었습니다.']);
     }
 
     /**
@@ -91,10 +91,10 @@ class UserController extends Controller
         if($path) {
             return response()->json(['profile_image' => $path]);
         }
-        return response()->json(['error' => 'Failed to upload preview image']);
+        return response()->json(['error' => '이미지 업로드에 실패하였습니다.']);
     }
 
-    /** 
+    /**
      * 'profile_image' : string type file path
      */
     public function destroyPreviewImage(Request $request) {
@@ -110,8 +110,8 @@ class UserController extends Controller
         $profileImage = $request->profile_image;
         $destroy = $this->imageHelper->destroyImage($profileImage);
         if($destroy) {
-            return response()->json(['message' => 'preview image deleted successfully']);
+            return response()->json(['message' => '미리보기 이미지가 삭제되었습니다.']);
         }
-        return response()->json(['error' => 'Failed to upload preview image']);
+        return response()->json(['error' => '미리보기 이미지 삭제에 실패하였습니다.'], 500);
     }
 }

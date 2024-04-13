@@ -8,9 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
-{   
+{
     public function __construct(protected ValidateHelper $valiHelper) {
-        
+
     }
 
     public function __invoke(Request $request) {
@@ -26,7 +26,7 @@ class LoginController extends Controller
         }
         // 주어진 ID를 통해 유저검색, password hashing 을 통해 비밀번호 비교 후 인증
         if(Auth::attempt([
-            'id' => $credentials['id'], 
+            'id' => $credentials['id'],
             'password' => $credentials['password']
         ])) {
             $request->session()->regenerate();
@@ -34,7 +34,7 @@ class LoginController extends Controller
         }
 
         return response()->json([
-            'error' => 'The provided credentials do not match our records.',
-        ], 400);
+            'error' => '아이디 또는 비밀번호가 일치하지 않습니다.',
+        ], 401);
     }
 }
