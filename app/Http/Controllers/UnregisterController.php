@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class UnregisterController extends Controller
 {
     public function __construct(
-        protected ImageHelper $imageHelper, 
+        protected ImageHelper $imageHelper,
         public LogoutController $logoutController) {
     }
     /** ユーザー削除 */
@@ -20,10 +20,10 @@ class UnregisterController extends Controller
         if($user) {
             $this->imageHelper->destroyImage($user->profile_image);
             // 이미지 삭제 실패 시 어떻게 처리하지
-            $user->delete(); 
+            $user->delete();
             $this->logoutController->__invoke($request);
-            return response()->json(['message' => 'Unregister successfully']);
+            return response()->json(['message' => '회원탈퇴에 성공하였습니다.']);
         }
-        return response()->json(['error' => 'Failed to delete User'], 500);
-    }  
+        return response()->json(['error' => '회원탈퇴에 실패하였습니다.'], 500);
+    }
 }
